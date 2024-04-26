@@ -73,7 +73,7 @@ function Layout({children}) {
                     <span className="badge badge-sm badge-primary indicator-item">0</span>
                   </div>
                 </div>
-                
+
               </div>
             </div>
 
