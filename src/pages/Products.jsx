@@ -1,21 +1,47 @@
 import { useEffect } from "react";
 import { useRef, useState } from "react";
+import Card from "../components/Card"
 
 function Products() {
+  const [data, setData] = useState([]);
+
   const searchRef = useRef(null);
   const categoryRef = useRef(null);
   const companyRef = useRef(null);
   const sortRef = useRef(null);
   const [price, setPrice] = useState(10000)
-  const [shipping, setShipping] = useState(null);
+  const [shipping, setShipping] = useState(false);
+
+  async function getData(url = 'https://strapi-store-server.onrender.com/api/products') {
+    try {
+      const res = await fetch(url);
+      const responseData = await res.json();
+      setData(responseData.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
-    
+    getData();
   }, [])
-  
+
+  function handleFilter() {
+
+  }
+
+  function handleReset() {
+    searchRef.current.value = null;
+    categoryRef.current.value = 'all';
+    companyRef.current.value = 'all';
+    sortRef.current.value = 'a-z';
+    setPrice(10000);
+    setShipping(false)
+  }
+
   return (
     <>
-      <div className="container w-3/4 mx-auto mt-20">
+      <div className="container w-3/4 mx-auto mt-14">
         <div className="filter p-5 bg-primary-content rounded-md">
           <div className="filter-top flex gap-5">
             <div className="field flex flex-col w-[244px] gap-2">
@@ -97,21 +123,29 @@ function Products() {
                   <input
                     type="checkbox"
                     className="checkbox checkbox-primary"
+                    checked={shipping}
+                    onChange={(e) => {setShipping(e.target.value)}}
                   />
                 </label>
               </div>
             </div>
 
             <div className="search-input">
-              <button className="btn btn-primary w-[230px]">Primary</button>
+              <button onClick={handleFilter} className="btn btn-primary w-[230px]">Primary</button>
             </div>
 
             <div className="reset-input">
-              <button className="btn btn-secondary w-[230px]">Secondary</button>
+              <button onClick={handleReset} className="btn btn-secondary w-[230px]">Secondary</button>
             </div>
           </div>
         </div>
-        <div className="products"></div>
+        <div className="products">
+          {
+            data.length > 0 && data.map((el, index) => {
+              return(<Card key={index} data={el}></Card>)
+            })
+          }
+        </div>
       </div>
     </>
   );
