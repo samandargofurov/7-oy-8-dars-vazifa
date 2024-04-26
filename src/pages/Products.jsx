@@ -139,7 +139,7 @@ function Products() {
             </div>
           </div>
         </div>
-        <div className="products">
+        <div className="products flex justify-between flex-wrap gap-2 mb-20">
           {
             data.length > 0 && data.map((el, index) => {
               return(<Card key={index} data={el}></Card>)
